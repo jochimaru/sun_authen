@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'screens/register.dart';
+import 'package:http/http.dart' show get;
+import 'dart:convert';
+
+
 
 void main() => runApp(App());
 
@@ -140,8 +144,22 @@ class _HomePageState extends State<HomePage> {
   }
 
 
-  void checkEmailAndPass(BuildContext context, String email, String password) {
+  void checkEmailAndPass(BuildContext context, String email, String password) async {
     print('email ==> $email, password ==> $password');
+
+    String url = 'http://www.androidthai.in.th/sun/getUserWhereUserJochi.php?isAdd=true&User=$email';
+    var response = await get(url);
+    var result = json.decode(response.body);
+    print('This is result => $result');
+    if(result.toString() == 'null'){
+
+    }else{
+
+    }
+  }
+
+  void showSnackBar(String messageString) {
+    
   }
 
   Widget SignUpButton(BuildContext context) {
