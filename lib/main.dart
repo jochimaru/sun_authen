@@ -3,8 +3,6 @@ import 'screens/register.dart';
 import 'package:http/http.dart' show get;
 import 'dart:convert';
 
-
-
 void main() => runApp(App());
 
 class App extends StatelessWidget {
@@ -25,11 +23,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final formKey = GlobalKey<FormState>();
+  final _scaffold = GlobalKey<ScaffoldState>();
   String emailString, passwordString;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffold,
         body: Form(
           key: formKey,
           child: ListView(
@@ -119,9 +119,10 @@ class _HomePageState extends State<HomePage> {
         if (passwordValue.length <= 5) {
           return 'Password must more than 5 charactors';
         }
-      },onSaved: (String value) {
-      passwordString = value;
-    },
+      },
+      onSaved: (String value) {
+        passwordString = value;
+      },
     );
   }
 
@@ -137,29 +138,39 @@ class _HomePageState extends State<HomePage> {
 //        print(formKey.currentState.validate());
         if (formKey.currentState.validate()) {
           formKey.currentState.save();
-          checkEmailAndPass(context,emailString,passwordString);
+          checkEmailAndPass(context, emailString, passwordString);
         }
       },
     );
   }
 
-
-  void checkEmailAndPass(BuildContext context, String email, String password) async {
+  void checkEmailAndPass(
+      BuildContext context, String email, String password) async {
     print('email ==> $email, password ==> $password');
 
-    String url = 'http://www.androidthai.in.th/sun/getUserWhereUserJochi.php?isAdd=true&User=$email';
+    String url =
+        'http://www.androidthai.in.th/sun/getUserWhereUserJochi.php?isAdd=true&User=$email';
     var response = await get(url);
     var result = json.decode(response.body);
     print('This is result => $result');
-    if(result.toString() == 'null'){
-
-    }else{
-
+    if (result.toString() == 'null') {
+      showSnackBar('User fail >,,<');
+    } else {
+      
     }
   }
 
   void showSnackBar(String messageString) {
-    
+    print('SnackBar work!!!');
+    final snackBar = new SnackBar(
+      content: Text(messageString),
+      backgroundColor: Colors.orange,
+      duration: new Duration(seconds: 9),
+      action: new SnackBarAction(label: 'Please Click', onPressed: (){
+        print('You click snack bar.');
+      }),
+    );
+    _scaffold.currentState.showSnackBar(snackBar);
   }
 
   Widget SignUpButton(BuildContext context) {
